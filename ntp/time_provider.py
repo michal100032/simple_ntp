@@ -91,7 +91,7 @@ class PPSTimeProvider(TimeProvider):
             return
 
         ntp_seconds = (clock_sec + NTP_EPOCH_OFFSET) & 0xFFFFFFFF
-        ntp_fraction = (clock_nsec << 32) // 1e9
+        ntp_fraction = (clock_nsec << 32) // NANOSECONDS_PER_SECOND
 
         self.timestamp = (ntp_seconds << 32) | ntp_fraction
         self.precision = precision
@@ -100,10 +100,10 @@ class PPSTimeProvider(TimeProvider):
     def get_timestamp(self) -> int:
         self.__update_state()
 
-        if self.timestamp_ns is None:
+        if self.timestamp is None:
             LOGGER.error("No valid PPS timestamp available")
 
-        return self.timestamp_ns
+        return self.timestamp
 
     def get_precision(self) -> int:
         self.__update_state()

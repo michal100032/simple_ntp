@@ -59,6 +59,7 @@ class PPSTimeProviderTests(unittest.TestCase):
 
     def _read_shm(
         self,
+        size,
         *,
         count=2,
         clock_sec=1_500_000_000,
@@ -85,7 +86,7 @@ class PPSTimeProviderTests(unittest.TestCase):
 
     def test_shared_memory_initialization(self):
         self.shared_memory.assert_called_once_with(
-            self.provider.NTP1,
+            self.provider.NTP2,
             flags=0,
             mode=0o600,
             size=struct.calcsize(self.provider.SHM_FORMAT),
