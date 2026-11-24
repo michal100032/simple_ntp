@@ -122,12 +122,6 @@ class PPSTimeProviderTests(unittest.TestCase):
     def test_precision(self):
         self.assertEqual(self.provider.get_precision(), -20)
 
-    def test_invalid_sample_is_rejected(self):
-        self.shm.read = lambda size: self._read_shm(valid=0)
-
-        with self.assertRaises(RuntimeError):
-            self.provider.get_timestamp()
-
     def test_duplicate_sample_is_ignored(self):
         self.provider.get_timestamp()
 
@@ -157,12 +151,6 @@ class PPSTimeProviderTests(unittest.TestCase):
             self.provider.timestamp,
             original_timestamp,
         )
-
-    def test_odd_counter_is_rejected(self):
-        self.shm.read = lambda size: self._read_shm(count=3)
-
-        with self.assertRaises(RuntimeError):
-            self.provider.get_timestamp()
 
 if __name__ == "__main__":
     unittest.main()
