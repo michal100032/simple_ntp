@@ -2,6 +2,6 @@
 
 from .packet import NTPPacket
 from .server import NTPServer
-from .time_provider import SystemTimeProvider, TimeProvider
+from .time_provider import SystemTimeProvider, PPSTimeProvider, TimeProvider
 
-__all__ = ["NTPPacket", "NTPServer", "TimeProvider", "SystemTimeProvider"]
+__all__ = ["NTPPacket", "NTPServer", "TimeProvider", "SystemTimeProvider", "PPSTimeProvider"]

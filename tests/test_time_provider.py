@@ -3,9 +3,9 @@
 from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
+import struct
 
-from ntp import SystemTimeProvider, TimeProvider
-
+from ntp import SystemTimeProvider, TimeProvider, PPSTimeProvider
 
 class SystemTimeProviderTests(unittest.TestCase):
     def test_provider_requires_an_implementation(self):
@@ -67,7 +67,7 @@ class PPSTimeProviderTests(unittest.TestCase):
         valid=1,
     ):
         return struct.pack(
-            SHM_FORMAT,
+            self.SHM_FORMAT,
             1,                  # mode
             count,
             clock_sec,
@@ -85,10 +85,10 @@ class PPSTimeProviderTests(unittest.TestCase):
 
     def test_shared_memory_initialization(self):
         self.shared_memory.assert_called_once_with(
-            NTP1,
+            self.NTP1,
             flags=0,
             mode=0o600,
-            size=struct.calcsize(SHM_FORMAT),
+            size=struct.calcsize(self.SHM_FORMAT),
         )
 
     def test_timestamp_conversion(self):

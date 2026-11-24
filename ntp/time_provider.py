@@ -12,14 +12,6 @@ LOGGER = logging.getLogger(__name__)
 NTP_EPOCH_OFFSET = 2_208_988_800
 NANOSECONDS_PER_SECOND = 1_000_000_000
 
-NTPD_BASE = 0x4E545030  # the base offset of the gpsd SHM area
-NTP2 = NTPD_BASE + 2    # the address of the PPS timesource in memory
-
-# Shared Memory segment layout, using the native Linux ABI.
-# Raspberry Pi 4: aarch64, little-endian.
-SHM_FORMAT = "@iiq i q i i i i i I I 8i"
-SHM_SIZE = struct.calcsize(SHM_FORMAT)
-
 class TimeProvider(ABC):
     """A trusted local clock and the metadata advertised for it."""
 
@@ -55,13 +47,21 @@ class SystemTimeProvider(TimeProvider):
 
 class PPSTimeProvider(TimeProvider):
     """Use the GNSS PPS signal from gpsd SHM as a reference"""
+    
+    NTPD_BASE = 0x4E545030  # the base offset of the gpsd SHM area
+    NTP2 = NTPD_BASE + 2    # the address of the PPS timesource in memory
+
+    # Shared Memory segment layout, using the native Linux ABI.
+    # Raspberry Pi 4: aarch64, little-endian.
+    SHM_FORMAT = "@iiq i q i i i i i I I 8i"
+    SHM_SIZE = struct.calcsize(SHM_FORMAT)
 
     def __init__(self):
         self.shm = sysv_ipc.SharedMemory(
-            NTP2,
+            self.NTP2,
             flags=0,
             mode=0o600,
-            size=SHM_SIZE
+            size=self.SHM_SIZE
         )
 
         self.last_count = None
@@ -69,8 +69,8 @@ class PPSTimeProvider(TimeProvider):
         self.precision = None
 
     def __update_state(self) -> None:
-        data = self.shm.read(SHM_SIZE)
-        fields = struct.unpack(SHM_FORMAT, data)
+        data = self.shm.read(self.SHM_SIZE)
+        fields = struct.unpack(self.SHM_FORMAT, data)
 
         (
             mode, count,
