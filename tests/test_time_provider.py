@@ -46,7 +46,9 @@ class PPSTimeProviderTests(unittest.TestCase):
     NTP_EPOCH_OFFSET = 2_208_988_800
 
     def setUp(self):
-        self.shm = SimpleNamespace(read=self._read_shm)
+        self.shm = SimpleNamespace(
+            read=lambda size: self._read_shm()
+        )
 
         self.provider_patcher = patch(
             "ntp.time_provider.sysv_ipc.SharedMemory",
@@ -59,7 +61,6 @@ class PPSTimeProviderTests(unittest.TestCase):
 
     def _read_shm(
         self,
-        size,
         *,
         count=2,
         clock_sec=1_500_000_000,
