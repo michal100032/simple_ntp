@@ -67,7 +67,7 @@ class PPSTimeProviderTests(unittest.TestCase):
         valid=1,
     ):
         return struct.pack(
-            self.SHM_FORMAT,
+            self.provider.SHM_FORMAT,
             1,                  # mode
             count,
             clock_sec,
@@ -85,10 +85,10 @@ class PPSTimeProviderTests(unittest.TestCase):
 
     def test_shared_memory_initialization(self):
         self.shared_memory.assert_called_once_with(
-            self.NTP1,
+            self.provider.NTP1,
             flags=0,
             mode=0o600,
-            size=struct.calcsize(self.SHM_FORMAT),
+            size=struct.calcsize(self.provider.SHM_FORMAT),
         )
 
     def test_timestamp_conversion(self):
