@@ -11,7 +11,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--host", default="127.0.0.1", help="IPv4 bind address (default: 127.0.0.1)")
     parser.add_argument("--port", type=int, default=123, help="UDP port (default: 123)")
-    parser.add_argument("--timesrc",default="sys", help="Time reference source (sys/gps, default: sys)")
+    parser.add_argument("--timesrc",default="gps", help="Time reference source (sys/gps, default: gps)")
     args = parser.parse_args()
     if not 1 <= args.port <= 65535:
         parser.error("--port must be between 1 and 65535")

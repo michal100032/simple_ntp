@@ -5,10 +5,22 @@ header described in [RFC 5905, section 7.3](https://www.rfc-editor.org/rfc/rfc59
 The `server.py` script uses `NTPServer` with a `SystemTimeProvider` to serve the
 system clock over UDP. `NTPPacket` parses requests and builds responses.
 
-Start the server from the repository root on an unprivileged development port:
+Requirements:
+```bash
+# become root
+sudo su
+
+# create a virtual environment
+python3 -m venv .venv
+
+# install sysv_ipc
+python3 -m pip install sys_ipc
+```
+
+Start the server as root from the repository root:
 
 ```sh
-python server.py --host 127.0.0.1 --port 8123
+sudo python server.py --host 127.0.0.1
 ```
 
 The default address is `127.0.0.1` and the default port is `123`. Binding UDP
