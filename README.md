@@ -12,15 +12,16 @@ sudo su
 
 # create a virtual environment
 python3 -m venv .venv
+source .venv/bin/activate
 
 # install sysv_ipc
 python3 -m pip install sys_ipc
 ```
 
-Start the server as root from the repository root:
+Start the server as root from the repository root and from inside the venv:
 
 ```sh
-sudo python server.py --host 127.0.0.1
+python server.py --host 127.0.0.1
 ```
 
 The default address is `127.0.0.1` and the default port is `123`. Binding UDP
